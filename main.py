@@ -70,7 +70,9 @@ with cols1[0]:
                 visible=False      # y축은 완전히 숨기기 (필요하면 조절)
             ),
             plot_bgcolor='#f7f9fc',
-            title=dict(text="새로운 캠페인 노출수"),    # 타이틀 빈 문자열로 제거
+            title=dict(text="새로운 캠페인 노출수"),
+            width=400,
+            height=300
         )
         
         fig2 = px.line(df[df["캠페인"] == "Test Group"], x="Date", y="클릭수")
@@ -86,7 +88,9 @@ with cols1[0]:
                 visible=False      # y축은 완전히 숨기기 (필요하면 조절)
             ),
             plot_bgcolor='#f7f9fc',
-            title=dict(text="새로운 캠페인 클릭수"),    # 타이틀 빈 문자열로 제거
+            title=dict(text="새로운 캠페인 클릭수"), 
+            width=400,
+            height=300
         )
 
         st.plotly_chart(fig1)
