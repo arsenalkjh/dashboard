@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 import scipy.stats as stats
 from statsmodels.stats.proportion import proportions_ztest
 
+
 df_test = pd.read_csv('./data/test_group.csv',delimiter=";")
 df_control = pd.read_csv('./data/control_group.csv',delimiter=";")
 
@@ -347,7 +348,7 @@ with col2:
         f"""
         <div style="background-color:#f0f2f6;padding:10px;border-radius:10px;text-align:center;margin:10px;">
             <h4 style="margin:5px;">실험 기간</h4>
-            <h2 style="color:#4A90E2;">{df['Date'].min().date()} ~ {df['Date'].max().date()}</h2>
+            <h2 style="color:#4A90E2;font-size:30px;">{df['Date'].min().date()} ~ {df['Date'].max().date()}</h2>
         </div>
         """, unsafe_allow_html=True
     )
@@ -376,8 +377,10 @@ if selected_option == "CTR(클릭율)":
         )
         st.plotly_chart(fig, use_container_width=True)
     with mid_cols[1]:
+        proportion_df1 = (df.groupby('캠페인')['클릭수'].sum() / df.groupby('캠페인')['노출수'].sum()).reset_index(name='클릭율')
+
         fig = px.bar(
-            df.groupby('캠페인')['클릭율'].mean().reset_index(),
+            proportion_df1,
             x='캠페인',
             y='클릭율',
             color='캠페인',
@@ -434,6 +437,7 @@ if selected_option == "CTR(클릭율)":
             <div style="background-color:#ffffff;padding:20px;border-radius:10px;text-align:center;margin:10px;border:2px solid #e0e0e0;">
                 <h4>검정 결과</h4>
                 <p style="font-size:18px;">{result_msg}</p>
+                <p style="font-size:14px;">통계적으로 유의미한 차이가 존재하더라도, 그 영향은 미비할 수 있습니다</p>
             </div>
             """, unsafe_allow_html=True
         )
@@ -454,8 +458,9 @@ else:
         )
         st.plotly_chart(fig, use_container_width=True)
     with mid_cols[1]:
+        proportion_df = (df.groupby('캠페인')['구매수'].sum() / df.groupby('캠페인')['조회수'].sum()).reset_index(name='구매전환율')
         fig = px.bar(
-            df.groupby('캠페인')['구매전환율'].mean().reset_index(),
+            proportion_df,
             x='캠페인',
             y='구매전환율',
             color='캠페인',
@@ -466,6 +471,7 @@ else:
             title="캠페인별 구매전환율"
         )
         st.plotly_chart(fig, use_container_width=True)
+
     with mid_cols[2]:
         fig = px.box(
             df,
@@ -498,9 +504,9 @@ else:
             f"""
             <div style="background-color:#f0f2f6;padding:20px;border-radius:10px;text-align:center;margin:10px;">
                 <h4>Z-통계량</h4>
-                <h2 style="color:#4A90E2;">{stat_cr:.4f}</h2>
+                <h2 style="color:#4A90E2;">{stat_cr}</h2>
                 <h4>p-값</h4>
-                <h2 style="color:#4A90E2;">{p_value_cr:.4f}</h2>
+                <h2 style="color:#4A90E2;">{p_value_cr}</h2>
             </div>
             """, unsafe_allow_html=True
         )
@@ -511,6 +517,7 @@ else:
             <div style="background-color:#ffffff;padding:20px;border-radius:10px;text-align:center;margin:10px;border:2px solid #e0e0e0;">
                 <h4>검정 결과</h4>
                 <p style="font-size:18px;">{result_msg}</p>
+                <p style="font-size:14px;">통계적으로 유의미한 차이가 존재하더라도, 그 영향은 미비할 수 있습니다</p>
             </div>
             """, unsafe_allow_html=True
-        )   
+        )  
